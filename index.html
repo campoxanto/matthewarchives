@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matthew Archives</title>
+<style>
+  :root {
+    --bg: #f6f6f6;
+    --panel: #ffffff;
+    --line: #a2a9b1;
+    --soft: #eaecf0;
+    --link: #0645ad;
+    --visited: #5a3696;
+    --accent: #d71920;
+    --strip: #cee3f8;
+    --text: #202122;
+    --muted: #54595d;
+  }
+
+  [hidden] { display: none !important; }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 13px/1.5 Verdana, Arial, sans-serif;
+  }
+
+  a { color: var(--link); }
+  a:visited { color: var(--visited); }
+  a:hover { text-decoration: underline; }
+
+  /* top strip, old reddit style */
+  #top {
+    background: var(--strip);
+    border-bottom: 1px solid #5f99cf;
+    padding: 6px 16px;
+  }
+  #top .site {
+    font: bold 28px Georgia, "Times New Roman", serif;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* wiki layout */
+  #wrap {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  #side { padding: 12px 0 12px 12px; }
+
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    margin-bottom: 12px;
+  }
+  .box h3 {
+    margin: 0;
+    padding: 3px 8px;
+    background: var(--soft);
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .box ul { list-style: none; margin: 0; padding: 6px 8px; }
+  .box li { padding: 1px 0; }
+  .box li.here { font-weight: bold; }
+  .box .pad { padding: 8px; }
+  .box input[type="search"] { width: 100%; padding: 3px; font: inherit; }
+
+  main {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    margin: 12px;
+    padding: 14px 20px 20px;
+    min-height: 60vh;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font: normal 28px Georgia, "Times New Roman", serif;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+  }
+
+  .sub { color: var(--muted); font-size: 12px; margin: 0 0 4px; }
+
+  .linkbtn {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--link);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .linkbtn[aria-pressed="true"] {
+    color: var(--text);
+    font-weight: bold;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  /* photo thumbnails */
+  ul.photos { list-style: none; margin: 14px 0 0; padding: 0; }
+  ul.photos a { text-decoration: none; }
+  ul.photos img { display: block; background: var(--soft); }
+  .cap b { display: block; color: var(--link); font-weight: normal; }
+  .cap small { display: block; color: var(--muted); font-size: 11px; }
+
+  ul.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  ul.grid a {
+    display: block;
+    border: 1px solid var(--line);
+    background: #f8f9fa;
+    padding: 4px;
+    text-align: center;
+  }
+  ul.grid a:hover { border-color: var(--link); }
+  ul.grid img { width: 100%; height: 130px; object-fit: cover; }
+  ul.grid .cap { padding-top: 4px; }
+
+  ul.list li { border-bottom: 1px dotted var(--line); }
+  ul.list a { display: flex; gap: 10px; padding: 6px 0; align-items: center; }
+  ul.list a:hover .cap b { text-decoration: underline; }
+  ul.list img { width: 70px; height: 70px; object-fit: cover; border: 1px solid var(--line); flex: none; }
+
+  #empty { margin-top: 16px; color: var(--muted); }
+
+  footer { max-width: 1100px; margin: 0 auto; padding: 0 12px 20px; color: var(--muted); font-size: 11px; }
+
+  /* lightbox */
+  #lb {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    z-index: 10;
+  }
+  #lbimg {
+    max-width: 92vw;
+    max-height: 76vh;
+    border: 6px solid #fff;
+    background: #fff;
+  }
+  #lbcap { color: #fff; }
+  #lbbar button {
+    font: inherit;
+    padding: 3px 12px;
+    margin: 0 3px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 700px) {
+    #wrap { grid-template-columns: 1fr; }
+    #side { padding: 12px 12px 0; }
+    main { margin: 0 12px 12px; padding: 12px; }
+    #top .site { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="top"><a class="site" href="index.html">Matthew Archives</a></div>
+
+<div id="wrap">
+  <aside id="side">
+    <div class="box">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="#" id="all">All photos</a></li>
+        <li><a href="#" id="rand">Random photo</a></li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Albums</h3>
+      <ul id="albums"></ul>
+    </div>
+    <div class="box">
+      <h3>Search</h3>
+      <div class="pad"><input id="q" type="search" placeholder="Search photos" aria-label="Search photos"></div>
+    </div>
+  </aside>
+
+  <main>
+    <h1 id="heading">All photos</h1>
+    <p class="sub" id="count"></p>
+    <p class="sub">View:
+      <button class="linkbtn" id="vgrid" aria-pressed="true">thumbnails</button> |
+      <button class="linkbtn" id="vlist" aria-pressed="false">list</button>
+    </p>
+    <ul class="photos grid" id="photos"></ul>
+    <p id="empty" hidden>No photos match. Clear the search or pick another album.</p>
+  </main>
+</div>
+
+<footer>Matthew Archives</footer>
+
+<div id="lb" hidden role="dialog" aria-label="Photo viewer">
+  <img id="lbimg" alt="">
+  <div id="lbcap"></div>
+  <div id="lbbar">
+    <button id="lbprev" aria-label="Previous photo">&lsaquo; Prev</button>
+    <button id="lbnext" aria-label="Next photo">Next &rsaquo;</button>
+    <button id="lbclose">Close</button>
+  </div>
+</div>
+
+<script>
+/* ------------------------------------------------------------
+   ADD NEW PHOTOS HERE.
+   1. Put the image file in the images folder.
+   2. Add one line below. Only "file" and "title" are required.
+      date, album and note are optional.
+   Every line needs a comma at the end EXCEPT the last one.
+   The filename must match the real file exactly, including
+   capital letters (photo4.JPG and photo4.jpg are different).
+   ------------------------------------------------------------ */
+var photos = [
+  { file: "photo.jpg",   title: "Photo 1",  album: "Cosplay" },
+  { file: "photo2.jpg",  title: "Photo 2",  album: "Cosplay" },
+  { file: "photo3.jpg",  title: "Photo 3",  album: "Archive" },
+  { file: "photo4.JPG",  title: "Photo 4",  album: "Archive" },
+  { file: "photo5.JPG",  title: "Photo 5",  album: "Archive" },
+  { file: "photo6.JPG",  title: "Photo 6",  album: "Archive" },
+  { file: "photo7.JPG",  title: "Photo 7",  album: "Archive" },
+  { file: "photo8.JPG",  title: "Photo 8",  album: "Archive" },
+  { file: "photo9.JPG",  title: "Photo 9",  album: "Archive" },
+  { file: "photo10.JPG", title: "Photo 10", album: "Archive" },
+  { file: "photo11.JPG", title: "Photo 11", album: "Archive" },
+  { file: "photo12.JPG", title: "Photo 12", album: "Archive" },
+  { file: "photo13.jpg", title: "Photo 13", album: "Cosplay" },
+  { file: "photo14.jpg", title: "Photo 14", album: "Cosplay" },
+  { file: "photo15.jpg", title: "Photo 15", album: "Cosplay" },
+  { file: "photo16.jpg", title: "Photo 16", album: "Cosplay" }
+];
+/* ------------------------------------------------------------ */
+
+(function () {
+  var state = { album: null, q: "", view: "grid" };
+  var shown = [];
+  var cur = 0;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function matches(p) {
+    if (state.album && p.album !== state.album) return false;
+    var q = state.q.trim().toLowerCase();
+    if (!q) return true;
+    return [p.title, p.album, p.date, p.note].join(" ").toLowerCase().indexOf(q) > -1;
+  }
+
+  function renderAlbums() {
+    var box = $("albums");
+    box.innerHTML = "";
+    var counts = {};
+    photos.forEach(function (p) {
+      if (p.album) counts[p.album] = (counts[p.album] || 0) + 1;
+    });
+    Object.keys(counts).forEach(function (name) {
+      var li = document.createElement("li");
+      var label = name + " (" + counts[name] + ")";
+      if (state.album === name) {
+        li.className = "here";
+        li.textContent = label;
+      } else {
+        var a = document.createElement("a");
+        a.href = "#";
+        a.textContent = label;
+        a.onclick = function (e) { e.preventDefault(); state.album = name; render(); };
+        li.appendChild(a);
+      }
+      box.appendChild(li);
+    });
+  }
+
+  function render() {
+    shown = photos.filter(matches);
+    var ul = $("photos");
+    ul.innerHTML = "";
+    ul.className = "photos " + state.view;
+
+    shown.forEach(function (p, i) {
+      var li = document.createElement("li");
+      var a = document.createElement("a");
+      a.href = "images/" + p.file;
+      a.onclick = function (e) { e.preventDefault(); openBox(i); };
+
+      var img = document.createElement("img");
+      img.src = "images/" + p.file;
+      img.alt = p.title;
+      img.loading = "lazy";
+
+      var cap = document.createElement("span");
+      cap.className = "cap";
+      var t = document.createElement("b");
+      t.textContent = p.title;
+      cap.appendChild(t);
+      var meta = [p.date, p.album].filter(Boolean).join(", ");
+      if (meta) {
+        var s = document.createElement("small");
+        s.textContent = meta;
+        cap.appendChild(s);
+      }
+
+      a.appendChild(img);
+      a.appendChild(cap);
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    $("heading").textContent = state.album || "All photos";
+    $("count").textContent = shown.length + " of " + photos.length + " photos";
+    $("empty").hidden = shown.length > 0;
+    $("vgrid").setAttribute("aria-pressed", state.view === "grid");
+    $("vlist").setAttribute("aria-pressed", state.view === "list");
+    renderAlbums();
+  }
+
+  function showBox() {
+    var p = shown[cur];
+    $("lbimg").src = "images/" + p.file;
+    $("lbimg").alt = p.title;
+    $("lbcap").textContent = p.title + " (" + (cur + 1) + " of " + shown.length + ")";
+  }
+  function openBox(i) {
+    cur = i;
+    showBox();
+    $("lb").hidden = false;
+    $("lbclose").focus();
+  }
+  function closeBox() { $("lb").hidden = true; }
+  function step(d) { cur = (cur + d + shown.length) % shown.length; showBox(); }
+
+  $("all").onclick = function (e) { e.preventDefault(); state.album = null; state.q = ""; $("q").value = ""; render(); };
+  $("rand").onclick = function (e) {
+    e.preventDefault();
+    state.album = null; state.q = ""; $("q").value = "";
+    render();
+    openBox(Math.floor(Math.random() * shown.length));
+  };
+  $("q").oninput = function () { state.q = this.value; render(); };
+  $("vgrid").onclick = function () { state.view = "grid"; render(); };
+  $("vlist").onclick = function () { state.view = "list"; render(); };
+
+  $("lbprev").onclick = function () { step(-1); };
+  $("lbnext").onclick = function () { step(1); };
+  $("lbclose").onclick = closeBox;
+  $("lb").onclick = function (e) { if (e.target === this) closeBox(); };
+  document.addEventListener("keydown", function (e) {
+    if ($("lb").hidden) return;
+    if (e.key === "Escape") closeBox();
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
